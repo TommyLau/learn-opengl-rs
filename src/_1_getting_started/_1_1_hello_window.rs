@@ -1,7 +1,6 @@
 extern crate gl;
 extern crate glfw;
 
-use std::sync::mpsc::Receiver;
 use glfw::{Action, Context, Key};
 
 // settings
@@ -23,7 +22,7 @@ pub fn main_1_1_1() {
         .create_window(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", glfw::WindowMode::Windowed)
         .expect("Failed to create GLFW window");
     window.make_current();
-    window.set_key_polling(true); // TODO: What's this for?
+    window.set_key_polling(true);
     window.set_framebuffer_size_polling(true);
 
     // gl: load all OpenGL function pointers
@@ -33,27 +32,28 @@ pub fn main_1_1_1() {
     // render loop
     // -----------
     while !window.should_close() {
-        // input
-        // -----
-        process_events(&mut window, &events);
-
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         window.swap_buffers();
         glfw.poll_events();
-    }
-}
 
-fn process_events(window: &mut glfw::Window, events: &Receiver<(f64, glfw::WindowEvent)>) {
-    for (_, event) in glfw::flush_messages(events) {
-        match event {
-            glfw::WindowEvent::Key(Key::Escape, _, Action::Press, _) => window.set_should_close(true),
-            glfw::WindowEvent::FramebufferSize(width, height) => {
-                // make sure the viewport matches the new window dimensions; note that width and
-                // height will be significantly larger than specified on retina displays.
-                unsafe { gl::Viewport(0, 0, width, height) }
+        // events
+        // ------
+        for (_, event) in glfw::flush_messages(&events) {
+            println!("{:?}", event);
+            match event {
+                glfw::WindowEvent::Key(Key::Escape, _, Action::Press, _) => {
+                    window.set_should_close(true)
+                }
+                glfw::WindowEvent::FramebufferSize(width, height) => {
+                    // make sure the viewport matches the new window dimensions; note that width and
+                    // height will be significantly larger than specified on retina displays.
+                    unsafe {
+                        gl::Viewport(0, 0, width, height);
+                    }
+                }
+                _ => {}
             }
-            _ => {}
         }
     }
 }
