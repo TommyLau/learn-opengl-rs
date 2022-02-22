@@ -28,7 +28,7 @@ pub fn main_1_1_1() {
 
     // gl: load all OpenGL function pointers
     // ---------------------------------------
-    gl::load_with(|s| window.get_proc_address(s));
+    gl::load_with(|s| glfw.get_proc_address_raw(s));
 
     // render loop
     // -----------
