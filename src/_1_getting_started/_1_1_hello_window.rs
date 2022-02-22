@@ -40,10 +40,9 @@ pub fn main_1_1_1() {
         // events
         // ------
         for (_, event) in glfw::flush_messages(&events) {
-            println!("{:?}", event);
             match event {
                 glfw::WindowEvent::Key(Key::Escape, _, Action::Press, _) => {
-                    window.set_should_close(true)
+                    window.set_should_close(true);
                 }
                 glfw::WindowEvent::FramebufferSize(width, height) => {
                     // make sure the viewport matches the new window dimensions; note that width and
