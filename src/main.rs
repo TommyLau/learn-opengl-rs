@@ -1,7 +1,20 @@
-use crate::_1_getting_started::main_1_1_1;
-
 mod _1_getting_started;
 
+use _1_getting_started::*;
+
+const MAIN_PROGRAM: &str = "1.1.2";
+
 fn main() {
-    main_1_1_1()
+    let mut main = MAIN_PROGRAM;
+    let args: Vec<String> = std::env::args().collect();
+
+    if args.len() > 1 {
+        main = args[1].as_str();
+    }
+
+    match main {
+        "1.1.1" => main_1_1_1(),
+        "1.1.2" => main_1_1_2(),
+        _ => main_1_1_2(),
+    }
 }
