@@ -85,7 +85,7 @@ checksum = "037ab472c33f67b5fbd3e9163a2645319e5356fcd355efa6d4eb7fff4bbcb554"
 
 [[package]]
 name = "learn-opengl-rs"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "gl",
  "glfw",
