@@ -174,11 +174,11 @@ pub fn main_1_2_4() {
 
             // draw first triangle using the data from the first VAO
             gl::BindVertexArray(vaos[0]);
-            gl::DrawArrays(gl::TRIANGLES, 0, 6);
+            gl::DrawArrays(gl::TRIANGLES, 0, 3);
 
             // then we draw the second triangle using the data from the second VAO
             gl::BindVertexArray(vaos[1]);
-            gl::DrawArrays(gl::TRIANGLES, 0, 6);
+            gl::DrawArrays(gl::TRIANGLES, 0, 3);
         }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
