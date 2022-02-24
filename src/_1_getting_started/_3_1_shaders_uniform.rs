@@ -22,9 +22,7 @@ void main()
 const FRAGMENT_SHADER_SOURCE: &str = "\
 #version 330 core
 out vec4 FragColor;
-
 uniform vec4 ourColor;
-
 void main()
 {
    FragColor = ourColor;
@@ -110,9 +108,9 @@ pub fn main_1_3_1() {
     // ------------------------------------------------------------------
     // Under macOS, the default type is 'f64', so we have to specific to 'f32'
     let vertices: [GLfloat; 9] = [
-        -0.5, -0.5, 0.0, // left
-        0.5, -0.5, 0.0, // right
-        0.0, 0.5, 0.0, // top
+        0.5, -0.5, 0.0,  // bottom right
+        -0.5, -0.5, 0.0,  // bottom let
+        0.0, 0.5, 0.0   // top
     ];
 
     let mut vbo: GLuint = 0;
@@ -133,15 +131,13 @@ pub fn main_1_3_1() {
         gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, (3 * mem::size_of::<GLfloat>()) as GLsizei, 0 as *const GLvoid);
         gl::EnableVertexAttribArray(0);
 
-        // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-        gl::BindBuffer(gl::ARRAY_BUFFER, 0);
-
         // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
         // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-        gl::BindVertexArray(0);
+        // gl::BindVertexArray(0);
 
-        // uncomment this call to draw in wireframe polygons.
-        // gl::PolygonMode(gl::FRONT_AND_BACK, gl::LINE);
+        // bind the VAO (it was already bound, but just to demonstrate): seeing as we only have a single VAO we can
+        // just bind it beforehand before rendering the respective triangle; this is another approach.
+        gl::BindVertexArray(vao);
     }
 
     // render loop
@@ -153,19 +149,18 @@ pub fn main_1_3_1() {
             gl::ClearColor(0.2, 0.3, 0.3, 1.0);
             gl::Clear(gl::COLOR_BUFFER_BIT);
 
-            // draw our first triangle
+            // be sure to activate the shader before any calls to glUniform
             gl::UseProgram(shader_program);
 
-            // Update color here, Tommy
+            // update shader uniform
             let time_value = glfw.get_time();
             let green_value = time_value.sin() as f32 / 2.0 + 0.5;
             let our_color = CString::new("ourColor").unwrap();
             let vertex_color_location = gl::GetUniformLocation(shader_program, our_color.as_ptr());
             gl::Uniform4f(vertex_color_location, 0.0, green_value, 0.0, 1.0);
 
-            gl::BindVertexArray(vao); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+            // render the triangle
             gl::DrawArrays(gl::TRIANGLES, 0, 3);
-            // gl::BindVertexArray(0); // no need to unbind it every time
         }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
