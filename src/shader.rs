@@ -62,33 +62,28 @@ impl Shader {
     // activate the shader
     // ------------------------------------------------------------------------
     pub fn use_program(&self) {
-        unsafe {
-            gl::UseProgram(self.id);
-        }
+        unsafe { gl::UseProgram(self.id); }
     }
 
     // utility uniform functions
     // ------------------------------------------------------------------------
+    #[allow(dead_code)]
     pub fn set_bool(&self, name: &str, value: bool) {
         let name = CString::new(&name[..]).unwrap();
-        unsafe {
-            gl::Uniform1i(gl::GetUniformLocation(self.id, name.as_ptr()), value as GLint);
-        }
+        unsafe { gl::Uniform1i(gl::GetUniformLocation(self.id, name.as_ptr()), value as GLint); }
     }
     // ------------------------------------------------------------------------
+    #[allow(dead_code)]
     pub fn set_int(&self, name: &str, value: GLint) {
         let name = CString::new(&name[..]).unwrap();
-        unsafe {
-            gl::Uniform1i(gl::GetUniformLocation(self.id, name.as_ptr()), value);
-        }
+        unsafe { gl::Uniform1i(gl::GetUniformLocation(self.id, name.as_ptr()), value); }
     }
     // ------------------------------------------------------------------------
+    #[allow(dead_code)]
     pub fn set_float(&self, name: &str, value: GLfloat)
     {
         let name = CString::new(&name[..]).unwrap();
-        unsafe {
-            gl::Uniform1f(gl::GetUniformLocation(self.id, name.as_ptr()), value);
-        }
+        unsafe { gl::Uniform1f(gl::GetUniformLocation(self.id, name.as_ptr()), value); }
     }
 
     // utility function for checking shader compilation/linking errors.
@@ -96,42 +91,45 @@ impl Shader {
     fn check_compile_errors(&self, shader: GLuint, shader_type: &str) -> Result<(), String>
     {
         let mut success: GLint = gl::TRUE as GLint;
-        let mut len: GLint = 0;
-        let mut info_log: Vec<u8> = Vec::new();
 
         match shader_type {
             "PROGRAM" => {
-                unsafe {
-                    gl::GetProgramiv(shader, gl::LINK_STATUS, &mut success);
-                }
+                unsafe { gl::GetProgramiv(shader, gl::LINK_STATUS, &mut success); }
+
                 if success == gl::FALSE as GLint {
-                    unsafe {
-                        gl::GetShaderiv(shader, gl::INFO_LOG_LENGTH, &mut len);
-                    }
-                    info_log.resize(len as usize + 1, 0);
-                    unsafe {
-                        gl::GetShaderInfoLog(shader, len, ptr::null_mut(), info_log.as_ptr() as *mut GLchar);
-                    }
-                    return Err(format!("ERROR::PROGRAM_LINKING_ERROR of type: {}\n{}\n -- --------------------------------------------------- -- ", shader_type, String::from_utf8_lossy(&info_log)));
+                    return Err(format!(
+                        "ERROR::PROGRAM_LINKING_ERROR of type: {}\n{}\n -- --------------------------------------------------- -- ",
+                        shader_type, self.get_shader_info_log(shader)));
                 }
             }
             _ => {
-                unsafe {
-                    gl::GetShaderiv(shader, gl::COMPILE_STATUS, &mut success);
-                }
+                unsafe { gl::GetShaderiv(shader, gl::COMPILE_STATUS, &mut success); }
+
                 if success == gl::FALSE as GLint {
-                    unsafe {
-                        gl::GetShaderiv(shader, gl::INFO_LOG_LENGTH, &mut len);
-                    }
-                    info_log.resize(len as usize + 1, 0);
-                    unsafe {
-                        gl::GetShaderInfoLog(shader, len, ptr::null_mut(), info_log.as_ptr() as *mut GLchar);
-                    }
-                    return Err(format!("ERROR::SHADER_COMPILATION_ERROR of type: {}\n{}\n -- --------------------------------------------------- -- ", shader_type, String::from_utf8_lossy(&info_log)));
+                    return Err(format!(
+                        "ERROR::SHADER_COMPILATION_ERROR of type: {}\n{}\n -- --------------------------------------------------- -- ",
+                        shader_type, self.get_shader_info_log(shader)));
                 }
             }
         }
 
         Ok(())
+    }
+
+    fn get_shader_info_log(&self, shader: GLuint) -> String {
+        let mut len: GLint = 0;
+
+        unsafe {
+            gl::GetShaderiv(shader, gl::INFO_LOG_LENGTH, &mut len);
+        }
+
+        let mut info_log: Vec<u8> = Vec::new();
+        info_log.resize(len as usize + 1, 0);
+
+        unsafe {
+            gl::GetShaderInfoLog(shader, len, ptr::null_mut(), info_log.as_ptr() as *mut GLchar);
+        }
+
+        String::from_utf8_lossy(&info_log).to_string()
     }
 }
