@@ -19,7 +19,7 @@ out vec3 ourColor;
 
 void main()
 {
-   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+   gl_Position = vec4(aPos, 1.0);
    ourColor = aColor;
 }
 ";
@@ -114,9 +114,10 @@ pub fn main_1_3_2() {
     // ------------------------------------------------------------------
     // Under macOS, the default type is 'f64', so we have to specific to 'f32'
     let vertices: [GLfloat; 18] = [
-        -0.5, -0.5, 0.0, 1.0, 0.0, 0.0,// left
-        0.5, -0.5, 0.0, 0.0, 1.0, 0.0,// right
-        0.0, 0.5, 0.0, 0.0, 0.0, 1.0// top
+        // positions      // colors
+        0.5,  -0.5, 0.0,  1.0, 0.0, 0.0,  // bottom right
+        -0.5, -0.5, 0.0,  0.0, 1.0, 0.0,  // bottom let
+        0.0,  0.5,  0.0,  0.0, 0.0, 1.0   // top
     ];
 
     let mut vbo: GLuint = 0;
@@ -134,20 +135,19 @@ pub fn main_1_3_2() {
                        vertices.as_ptr() as *const GLvoid,
                        gl::STATIC_DRAW);
 
+        // position attribute
         gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, (6 * mem::size_of::<GLfloat>()) as GLsizei, 0 as *const GLvoid);
         gl::EnableVertexAttribArray(0);
+        // color attribute
         gl::VertexAttribPointer(1, 3, gl::FLOAT, gl::FALSE, (6 * mem::size_of::<GLfloat>()) as GLsizei, (3 * mem::size_of::<GLfloat>()) as *const GLvoid);
         gl::EnableVertexAttribArray(1);
-
-        // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-        gl::BindBuffer(gl::ARRAY_BUFFER, 0);
 
         // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
         // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
         gl::BindVertexArray(0);
 
-        // uncomment this call to draw in wireframe polygons.
-        // gl::PolygonMode(gl::FRONT_AND_BACK, gl::LINE);
+        // as we only have a single shader, we could also just activate our shader once beforehand if we want to
+        gl::UseProgram(shader_program);
     }
 
     // render loop
@@ -159,9 +159,8 @@ pub fn main_1_3_2() {
             gl::ClearColor(0.2, 0.3, 0.3, 1.0);
             gl::Clear(gl::COLOR_BUFFER_BIT);
 
-            // draw our first triangle
-            gl::UseProgram(shader_program);
-            gl::BindVertexArray(vao); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+            // render the triangle
+            gl::BindVertexArray(vao);
             gl::DrawArrays(gl::TRIANGLES, 0, 3);
             // gl::BindVertexArray(0); // no need to unbind it every time
         }
