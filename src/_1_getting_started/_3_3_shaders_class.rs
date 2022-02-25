@@ -34,9 +34,9 @@ pub fn main_1_3_3() {
 
     // build and compile our shader program
     // ------------------------------------
-    let shader = match Shader::new(
-        "src/_1_getting_started/shaders/3.3.shader.vs",
-        "src/_1_getting_started/shaders/3.3.shader.fs")
+    let shader = match Shader::new( // you can name your shader files however you like
+                                    "src/_1_getting_started/shaders/3.3.shader.vs",
+                                    "src/_1_getting_started/shaders/3.3.shader.fs")
     {
         Ok(shader) => shader,
         Err(error) => {
@@ -80,9 +80,6 @@ pub fn main_1_3_3() {
         // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
         // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
         gl::BindVertexArray(0);
-
-        // as we only have a single shader, we could also just activate our shader once beforehand if we want to
-        shader.use_program();
     }
 
     // render loop
@@ -95,9 +92,9 @@ pub fn main_1_3_3() {
             gl::Clear(gl::COLOR_BUFFER_BIT);
 
             // render the triangle
+            shader.use_program();
             gl::BindVertexArray(vao);
             gl::DrawArrays(gl::TRIANGLES, 0, 3);
-            // gl::BindVertexArray(0); // no need to unbind it every time
         }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
