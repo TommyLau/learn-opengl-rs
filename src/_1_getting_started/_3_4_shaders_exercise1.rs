@@ -35,8 +35,8 @@ pub fn main_1_3_4() {
     // build and compile our shader program
     // ------------------------------------
     let shader = match Shader::new( // you can name your shader files however you like
-                                    "src/_1_getting_started/shaders/3.4.shader.vs",
-                                    "src/_1_getting_started/shaders/3.3.shader.fs")
+                                    "src/_1_getting_started/shaders/3.4.shader.vert",
+                                    "src/_1_getting_started/shaders/3.3.shader.frag")
     {
         Ok(shader) => shader,
         Err(error) => {
