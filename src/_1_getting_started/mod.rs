@@ -10,6 +10,7 @@ mod _3_2_shaders_interpolation;
 mod _3_3_shaders_class;
 mod _3_4_shaders_exercise1;
 mod _3_5_shaders_exercise2;
+mod _3_6_shaders_exercise3;
 
 pub use _1_1_hello_window::*;
 pub use _1_1_hello_window_clear::*;
@@ -23,3 +24,4 @@ pub use _3_2_shaders_interpolation::*;
 pub use _3_3_shaders_class::*;
 pub use _3_4_shaders_exercise1::*;
 pub use _3_5_shaders_exercise2::*;
+pub use _3_6_shaders_exercise3::*;
