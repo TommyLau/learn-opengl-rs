@@ -1,8 +1,9 @@
+mod shader;
 mod _1_getting_started;
 
 use _1_getting_started::*;
 
-const MAIN_PROGRAM: &str = "1.3.2";
+const MAIN_PROGRAM: &str = "1.3.3";
 
 fn main() {
     let mut main = MAIN_PROGRAM;
@@ -22,6 +23,7 @@ fn main() {
         "1.2.5" => main_1_2_5(),
         "1.3.1" => main_1_3_1(),
         "1.3.2" => main_1_3_2(),
+        "1.3.3" => main_1_3_3(),
         _ => {}
     }
 }
