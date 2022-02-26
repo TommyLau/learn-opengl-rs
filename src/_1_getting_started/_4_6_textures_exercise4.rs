@@ -104,8 +104,8 @@ pub fn main_1_4_6() {
         gl::GenTextures(1, &mut texture1);
         gl::BindTexture(gl::TEXTURE_2D, texture1);
         // set the texture wrapping parameters
-        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::CLAMP_TO_EDGE as GLint); // note that we set the container wrapping method to GL_CLAMP_TO_EDGE
-        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_T, gl::CLAMP_TO_EDGE as GLint);
+        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::REPEAT as GLint); // set texture wrapping to GL_REPEAT (default wrapping method)
+        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_T, gl::REPEAT as GLint);
         // set texture filtering parameters
         gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::LINEAR as GLint);
         gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::LINEAR as GLint);
@@ -126,7 +126,7 @@ pub fn main_1_4_6() {
         gl::GenTextures(1, &mut texture2);
         gl::BindTexture(gl::TEXTURE_2D, texture2);
         // set the texture wrapping parameters
-        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::REPEAT as GLint);
+        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::REPEAT as GLint); // set texture wrapping to GL_REPEAT (default wrapping method)
         gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_T, gl::REPEAT as GLint);
         // set texture filtering parameters
         gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::LINEAR as GLint);
@@ -154,6 +154,7 @@ pub fn main_1_4_6() {
     // or set it via the texture class
     shader.set_int("texture2", 1);
 
+    // stores how much we're seeing of either texture
     let mut mix_value: GLfloat = 0.2;
 
     // render loop
@@ -171,9 +172,11 @@ pub fn main_1_4_6() {
             gl::ActiveTexture(gl::TEXTURE1);
             gl::BindTexture(gl::TEXTURE_2D, texture2);
 
+            // set the texture mix value in the shader
+            shader.set_float("mixValue", mix_value);
+
             // render container
             shader.use_program();
-            shader.set_float("mixValue", mix_value);
             gl::BindVertexArray(vao);
             gl::DrawElements(gl::TRIANGLES, 6, gl::UNSIGNED_INT, 0 as *const GLvoid);
         }
@@ -186,18 +189,17 @@ pub fn main_1_4_6() {
         // events
         // ------
         for (_, event) in glfw::flush_messages(&events) {
-            println!("{:?}", event);
             match event {
                 glfw::WindowEvent::Key(Key::Escape, _, Action::Press, _) => {
                     window.set_should_close(true);
                 }
                 glfw::WindowEvent::Key(Key::Up, _, Action::Press | Action::Repeat, _) => {
-                    mix_value += 0.01;
-                    if mix_value > 1.0 { mix_value = 1.0 }
+                    mix_value += 0.001;
+                    if mix_value >= 1.0 { mix_value = 1.0 }
                 }
                 glfw::WindowEvent::Key(Key::Down, _, Action::Press | Action::Repeat, _) => {
-                    mix_value -= 0.01;
-                    if mix_value < 0.0 { mix_value = 0.0 }
+                    mix_value -= 0.001;
+                    if mix_value <= 0.0 { mix_value = 0.0 }
                 }
                 glfw::WindowEvent::FramebufferSize(width, height) => {
                     // make sure the viewport matches the new window dimensions; note that width and
