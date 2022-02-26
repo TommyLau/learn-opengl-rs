@@ -1,6 +1,7 @@
 extern crate gl;
 extern crate glfw;
 
+use std::ffi::CString;
 use std::mem;
 use gl::types::*;
 use glfw::{Action, Context, Key};
@@ -51,19 +52,17 @@ pub fn main_1_4_2() {
     // Under macOS, the default type is 'f64', so we have to specific to 'f32'
     let vertices: [GLfloat; 32] = [
         // positions      // colors       // texture coords
-        0.5, 0.5, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0,   // top right
-        0.5, -0.5, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0,   // bottom right
-        -0.5, -0.5, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0,   // bottom left
-        -0.5, 0.5, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0    // top left
+        0.5,   0.5, 0.0,  1.0, 0.0, 0.0,  1.0, 1.0,   // top right
+        0.5,  -0.5, 0.0,  0.0, 1.0, 0.0,  1.0, 0.0,   // bottom right
+        -0.5, -0.5, 0.0,  0.0, 0.0, 1.0,  0.0, 0.0,   // bottom left
+        -0.5,  0.5, 0.0,  1.0, 1.0, 0.0,  0.0, 1.0    // top left
     ];
     let indices: [GLuint; 6] = [
         0, 1, 3,  // first Triangle
         1, 2, 3   // second Triangle
     ];
 
-    let mut vbo: GLuint = 0;
-    let mut vao: GLuint = 0;
-    let mut ebo: GLuint = 0;
+    let (mut vbo, mut vao, mut ebo): (GLuint, GLuint, GLuint) = (0, 0, 0);
 
     unsafe {
         gl::GenVertexArrays(1, &mut vao);
@@ -97,11 +96,13 @@ pub fn main_1_4_2() {
 
     // load and create a texture
     // -------------------------
-    let mut textures: [GLuint; 2] = [0; 2];
+    let (mut texture1, mut texture2): (GLuint, GLuint) = (0, 0);
 
+    // texture 1
+    // ---------
     unsafe {
-        gl::GenTextures(2, textures.as_mut_ptr());
-        gl::BindTexture(gl::TEXTURE_2D, textures[0]); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+        gl::GenTextures(1, &mut texture1);
+        gl::BindTexture(gl::TEXTURE_2D, texture1);
         // set the texture wrapping parameters
         gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::REPEAT as GLint); // set texture wrapping to GL_REPEAT (default wrapping method)
         gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_T, gl::REPEAT as GLint);
@@ -117,8 +118,13 @@ pub fn main_1_4_2() {
         gl::TexImage2D(gl::TEXTURE_2D, 0, gl::RGB as GLint, img.width() as GLsizei, img.height() as GLsizei,
                        0, gl::RGB, gl::UNSIGNED_BYTE, data.as_ptr() as *const GLvoid);
         gl::GenerateMipmap(gl::TEXTURE_2D);
+    }
 
-        gl::BindTexture(gl::TEXTURE_2D, textures[1]); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+    // texture 2
+    // ---------
+    unsafe {
+        gl::GenTextures(1, &mut texture2);
+        gl::BindTexture(gl::TEXTURE_2D, texture2);
         // set the texture wrapping parameters
         gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::REPEAT as GLint); // set texture wrapping to GL_REPEAT (default wrapping method)
         gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_T, gl::REPEAT as GLint);
@@ -130,15 +136,22 @@ pub fn main_1_4_2() {
     let img = image::open("resources/textures/awesomeface.png")
         .expect("Failed to load texture").flipv();
     let data = img.as_bytes();
-
     unsafe {
+        // note that the awesomeface.png has transparency and thus an alpha channel, so make sure to tell OpenGL the data type is of GL_RGBA
         gl::TexImage2D(gl::TEXTURE_2D, 0, gl::RGBA as GLint, img.width() as GLsizei, img.height() as GLsizei,
                        0, gl::RGBA, gl::UNSIGNED_BYTE, data.as_ptr() as *const GLvoid);
         gl::GenerateMipmap(gl::TEXTURE_2D);
     }
 
-    shader.use_program();
-    shader.set_int("texture1", 0);
+    // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
+    // -------------------------------------------------------------------------------------------
+    shader.use_program(); // don't forget to activate/use the shader before setting uniforms!
+    // either set it manually like so:
+    unsafe {
+        let name = CString::new("texture1").unwrap();
+        gl::Uniform1i(gl::GetUniformLocation(shader.id, name.as_ptr()), 0);
+    }
+    // or set it via the texture class
     shader.set_int("texture2", 1);
 
     // render loop
@@ -150,11 +163,11 @@ pub fn main_1_4_2() {
             gl::ClearColor(0.2, 0.3, 0.3, 1.0);
             gl::Clear(gl::COLOR_BUFFER_BIT);
 
-            // bind Texture
+            // bind textures on corresponding texture units
             gl::ActiveTexture(gl::TEXTURE0);
-            gl::BindTexture(gl::TEXTURE_2D, textures[0]);
+            gl::BindTexture(gl::TEXTURE_2D, texture1);
             gl::ActiveTexture(gl::TEXTURE1);
-            gl::BindTexture(gl::TEXTURE_2D, textures[1]);
+            gl::BindTexture(gl::TEXTURE_2D, texture2);
 
             // render container
             shader.use_program();
