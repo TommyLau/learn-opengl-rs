@@ -14,6 +14,7 @@ mod _3_6_shaders_exercise3;
 mod _4_1_textures;
 mod _4_2_textures_combined;
 mod _4_3_textures_exercise1;
+mod _4_4_textures_exercise2;
 
 pub use _1_1_hello_window::*;
 pub use _1_1_hello_window_clear::*;
@@ -31,3 +32,4 @@ pub use _3_6_shaders_exercise3::*;
 pub use _4_1_textures::*;
 pub use _4_2_textures_combined::*;
 pub use _4_3_textures_exercise1::*;
+pub use _4_4_textures_exercise2::*;
