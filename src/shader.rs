@@ -73,7 +73,6 @@ impl Shader {
         unsafe { gl::Uniform1i(gl::GetUniformLocation(self.id, name.as_ptr()), value as GLint); }
     }
     // ------------------------------------------------------------------------
-    #[allow(dead_code)]
     pub fn set_int(&self, name: &str, value: GLint) {
         let name = CString::new(&name[..]).unwrap();
         unsafe { gl::Uniform1i(gl::GetUniformLocation(self.id, name.as_ptr()), value); }
