@@ -46,37 +46,17 @@ pub fn main_1_4_1() {
         }
     };
 
-    let mut texture: GLuint = 0;
-    unsafe {
-        gl::GenTextures(1, &mut texture);
-        gl::BindTexture(gl::TEXTURE_2D, texture);
-        // set the texture wrapping/filtering options (on the currently bound texture object)
-        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::REPEAT as GLint);
-        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_T, gl::REPEAT as GLint);
-        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::LINEAR as GLint);
-        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::LINEAR as GLint);
-    }
-    let img = image::open("resources/textures/container.jpg")
-        .expect("Failed to load texture");
-    let data = img.as_bytes();
-    unsafe {
-        // load and generate the texture
-        gl::TexImage2D( gl::TEXTURE_2D, 0, gl::RGB as GLint, img.width() as GLsizei, img.height() as GLsizei,
-            0, gl::RGB, gl::UNSIGNED_BYTE, data.as_ptr() as *const GLvoid);
-        gl::GenerateMipmap(gl::TEXTURE_2D);
-    }
-
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
     // Under macOS, the default type is 'f64', so we have to specific to 'f32'
     let vertices: [GLfloat; 32] = [
         // positions      // colors       // texture coords
-        0.5, 0.5, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0,   // top right
-        0.5, -0.5, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0,   // bottom right
-        -0.5, -0.5, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0,   // bottom left
-        -0.5, 0.5, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0    // top left
+        0.5,   0.5, 0.0,  1.0, 0.0, 0.0,  1.0, 1.0,   // top right
+        0.5,  -0.5, 0.0,  0.0, 1.0, 0.0,  1.0, 0.0,   // bottom right
+        -0.5, -0.5, 0.0,  0.0, 0.0, 1.0,  0.0, 0.0,   // bottom left
+        -0.5,  0.5, 0.0,  1.0, 1.0, 0.0,  0.0, 1.0    // top left
     ];
-    let indices: [GLuint; 6] = [  // note that we start from 0!
+    let indices: [GLuint; 6] = [
         0, 1, 3,  // first Triangle
         1, 2, 3   // second Triangle
     ];
@@ -89,7 +69,7 @@ pub fn main_1_4_1() {
         gl::GenVertexArrays(1, &mut vao);
         gl::GenBuffers(1, &mut vbo);
         gl::GenBuffers(1, &mut ebo);
-        // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+
         gl::BindVertexArray(vao);
 
         gl::BindBuffer(gl::ARRAY_BUFFER, vbo);
@@ -113,10 +93,30 @@ pub fn main_1_4_1() {
         // texture attribute
         gl::VertexAttribPointer(2, 2, gl::FLOAT, gl::FALSE, (8 * mem::size_of::<GLfloat>()) as GLsizei, (6 * mem::size_of::<GLfloat>()) as *const GLvoid);
         gl::EnableVertexAttribArray(2);
+    }
 
-        // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
-        // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-        gl::BindVertexArray(0);
+    // load and create a texture
+    // -------------------------
+    let mut texture: GLuint = 0;
+
+    unsafe {
+        gl::GenTextures(1, &mut texture);
+        gl::BindTexture(gl::TEXTURE_2D, texture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+        // set the texture wrapping parameters
+        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::REPEAT as GLint); // set texture wrapping to GL_REPEAT (default wrapping method)
+        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_T, gl::REPEAT as GLint);
+        // set texture filtering parameters
+        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::LINEAR as GLint);
+        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::LINEAR as GLint);
+    }
+    // load image, create texture and generate mipmaps
+    let img = image::open("resources/textures/container.jpg")
+        .expect("Failed to load texture");
+    let data = img.as_bytes();
+    unsafe {
+        gl::TexImage2D(gl::TEXTURE_2D, 0, gl::RGB as GLint, img.width() as GLsizei, img.height() as GLsizei,
+                       0, gl::RGB, gl::UNSIGNED_BYTE, data.as_ptr() as *const GLvoid);
+        gl::GenerateMipmap(gl::TEXTURE_2D);
     }
 
     // render loop
@@ -128,9 +128,11 @@ pub fn main_1_4_1() {
             gl::ClearColor(0.2, 0.3, 0.3, 1.0);
             gl::Clear(gl::COLOR_BUFFER_BIT);
 
-            // render the triangle
-            shader.use_program();
+            // bind Texture
             gl::BindTexture(gl::TEXTURE_2D, texture);
+
+            // render container
+            shader.use_program();
             gl::BindVertexArray(vao);
             gl::DrawElements(gl::TRIANGLES, 6, gl::UNSIGNED_INT, 0 as *const GLvoid);
         }
@@ -164,5 +166,6 @@ pub fn main_1_4_1() {
     unsafe {
         gl::DeleteVertexArrays(1, &vao);
         gl::DeleteBuffers(1, &vbo);
+        gl::DeleteBuffers(1, &ebo);
     }
 }
