@@ -3,7 +3,7 @@ mod _1_getting_started;
 
 use _1_getting_started::*;
 
-const MAIN_PROGRAM: &str = "1.4.4";
+const MAIN_PROGRAM: &str = "1.4.5";
 
 fn main() {
     let mut main = MAIN_PROGRAM;
@@ -31,6 +31,7 @@ fn main() {
         "1.4.2" => main_1_4_2(),
         "1.4.3" => main_1_4_3(),
         "1.4.4" => main_1_4_4(),
+        "1.4.5" => main_1_4_5(),
         _ => {}
     }
 }
