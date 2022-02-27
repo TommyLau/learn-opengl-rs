@@ -53,10 +53,10 @@ pub fn main_1_5_1() {
     // Under macOS, the default type is 'f64', so we have to specific to 'f32'
     let vertices: [GLfloat; 20] = [
         // positions      // texture coords
-        0.5, 0.5, 0.0, 1.0, 1.0,   // top right
-        0.5, -0.5, 0.0, 1.0, 0.0,   // bottom right
-        -0.5, -0.5, 0.0, 0.0, 0.0,   // bottom left
-        -0.5, 0.5, 0.0, 0.0, 1.0    // top left
+        0.5,   0.5, 0.0,  1.0, 1.0,   // top right
+        0.5,  -0.5, 0.0,  1.0, 0.0,   // bottom right
+        -0.5, -0.5, 0.0,  0.0, 0.0,   // bottom left
+        -0.5,  0.5, 0.0,  0.0, 1.0    // top left
     ];
     let indices: [GLuint; 6] = [
         0, 1, 3,  // first Triangle
@@ -163,15 +163,15 @@ pub fn main_1_5_1() {
             gl::BindTexture(gl::TEXTURE_2D, texture2);
 
             // create transformations
-            let mut trans: glm::Mat4 = glm::identity(); // make sure to initialize matrix to identity matrix first
-            trans = glm::translate(&trans, &glm::vec3(0.5, -0.5, 0.0));
-            trans = glm::rotate(&trans, glfw.get_time().to_radians() as f32, &glm::vec3(0.0, 0.0, 1.0));
+            let mut transform: glm::Mat4 = glm::identity(); // make sure to initialize matrix to identity matrix first
+            transform = glm::translate(&transform, &glm::vec3(0.5, -0.5, 0.0));
+            transform = glm::rotate(&transform, glfw.get_time() as f32, &glm::vec3(0.0, 0.0, 1.0));
 
             // get matrix's uniform location and set matrix
             shader.use_program();
             let name = CString::new("transform").unwrap();
             let transform_location = gl::GetUniformLocation(shader.id, name.as_ptr());
-            gl::UniformMatrix4fv(transform_location, 1, gl::FALSE, trans.as_ptr());
+            gl::UniformMatrix4fv(transform_location, 1, gl::FALSE, transform.as_ptr());
 
             // render container
             gl::BindVertexArray(vao);
