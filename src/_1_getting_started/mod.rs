@@ -17,6 +17,7 @@ mod _4_3_textures_exercise1;
 mod _4_4_textures_exercise2;
 mod _4_5_textures_exercise3;
 mod _4_6_textures_exercise4;
+mod _5_1_transformations;
 
 pub use _1_1_hello_window::*;
 pub use _1_1_hello_window_clear::*;
@@ -37,3 +38,4 @@ pub use _4_3_textures_exercise1::*;
 pub use _4_4_textures_exercise2::*;
 pub use _4_5_textures_exercise3::*;
 pub use _4_6_textures_exercise4::*;
+pub use _5_1_transformations::*;
