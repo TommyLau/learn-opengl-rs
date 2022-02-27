@@ -39,7 +39,7 @@ pub fn main_1_5_1() {
     // ------------------------------------
     let shader = match Shader::new( // you can name your shader files however you like
                                     "src/_1_getting_started/shaders/5.1.shader.vert",
-                                    "src/_1_getting_started/shaders/4.6.shader.frag")
+                                    "src/_1_getting_started/shaders/5.1.shader.frag")
     {
         Ok(shader) => shader,
         Err(error) => {
@@ -52,7 +52,7 @@ pub fn main_1_5_1() {
     // ------------------------------------------------------------------
     // Under macOS, the default type is 'f64', so we have to specific to 'f32'
     let vertices: [GLfloat; 20] = [
-        // positions      // texture coords (note that we changed them to 'zoom in' on our texture image)
+        // positions      // texture coords
         0.5, 0.5, 0.0, 1.0, 1.0,   // top right
         0.5, -0.5, 0.0, 1.0, 0.0,   // bottom right
         -0.5, -0.5, 0.0, 0.0, 0.0,   // bottom left
@@ -102,7 +102,7 @@ pub fn main_1_5_1() {
         gl::GenTextures(1, &mut texture1);
         gl::BindTexture(gl::TEXTURE_2D, texture1);
         // set the texture wrapping parameters
-        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::REPEAT as GLint); // set texture wrapping to GL_REPEAT (default wrapping method)
+        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::REPEAT as GLint);
         gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_T, gl::REPEAT as GLint);
         // set texture filtering parameters
         gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::LINEAR as GLint);
@@ -110,7 +110,7 @@ pub fn main_1_5_1() {
     }
     // load image, create texture and generate mipmaps
     let img = image::open("resources/textures/container.jpg")
-        .expect("Failed to load texture");
+        .expect("Failed to load texture").flipv();
     let data = img.as_bytes();
     unsafe {
         gl::TexImage2D(gl::TEXTURE_2D, 0, gl::RGB as GLint, img.width() as GLsizei, img.height() as GLsizei,
@@ -124,7 +124,7 @@ pub fn main_1_5_1() {
         gl::GenTextures(1, &mut texture2);
         gl::BindTexture(gl::TEXTURE_2D, texture2);
         // set the texture wrapping parameters
-        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::REPEAT as GLint); // set texture wrapping to GL_REPEAT (default wrapping method)
+        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::REPEAT as GLint);
         gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_T, gl::REPEAT as GLint);
         // set texture filtering parameters
         gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::LINEAR as GLint);
@@ -132,7 +132,7 @@ pub fn main_1_5_1() {
     }
     // load image, create texture and generate mipmaps
     let img = image::open("resources/textures/awesomeface.png")
-        .expect("Failed to load texture");
+        .expect("Failed to load texture").flipv();
     let data = img.as_bytes();
     unsafe {
         // note that the awesomeface.png has transparency and thus an alpha channel, so make sure to tell OpenGL the data type is of GL_RGBA
@@ -143,17 +143,9 @@ pub fn main_1_5_1() {
 
     // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
     // -------------------------------------------------------------------------------------------
-    shader.use_program(); // don't forget to activate/use the shader before setting uniforms!
-    // either set it manually like so:
-    unsafe {
-        let name = CString::new("texture1").unwrap();
-        gl::Uniform1i(gl::GetUniformLocation(shader.id, name.as_ptr()), 0);
-    }
-    // or set it via the texture class
+    shader.use_program();
+    shader.set_int("texture1", 0);
     shader.set_int("texture2", 1);
-
-    // stores how much we're seeing of either texture
-    let mut mix_value: GLfloat = 0.2;
 
     // render loop
     // -----------
@@ -170,20 +162,18 @@ pub fn main_1_5_1() {
             gl::ActiveTexture(gl::TEXTURE1);
             gl::BindTexture(gl::TEXTURE_2D, texture2);
 
-            // render container
-            shader.use_program();
-
-            let mut trans: glm::Mat4 = glm::identity();
+            // create transformations
+            let mut trans: glm::Mat4 = glm::identity(); // make sure to initialize matrix to identity matrix first
             trans = glm::translate(&trans, &glm::vec3(0.5, -0.5, 0.0));
             trans = glm::rotate(&trans, glfw.get_time().to_radians() as f32, &glm::vec3(0.0, 0.0, 1.0));
 
+            // get matrix's uniform location and set matrix
+            shader.use_program();
             let name = CString::new("transform").unwrap();
             let transform_location = gl::GetUniformLocation(shader.id, name.as_ptr());
             gl::UniformMatrix4fv(transform_location, 1, gl::FALSE, trans.as_ptr());
 
-            // set the texture mix value in the shader
-            shader.set_float("mixValue", mix_value);
-
+            // render container
             gl::BindVertexArray(vao);
             gl::DrawElements(gl::TRIANGLES, 6, gl::UNSIGNED_INT, 0 as *const GLvoid);
         }
@@ -199,14 +189,6 @@ pub fn main_1_5_1() {
             match event {
                 glfw::WindowEvent::Key(Key::Escape, _, Action::Press, _) => {
                     window.set_should_close(true);
-                }
-                glfw::WindowEvent::Key(Key::Up, _, Action::Press | Action::Repeat, _) => {
-                    mix_value += 0.001;
-                    if mix_value >= 1.0 { mix_value = 1.0 }
-                }
-                glfw::WindowEvent::Key(Key::Down, _, Action::Press | Action::Repeat, _) => {
-                    mix_value -= 0.001;
-                    if mix_value <= 0.0 { mix_value = 0.0 }
                 }
                 glfw::WindowEvent::FramebufferSize(width, height) => {
                     // make sure the viewport matches the new window dimensions; note that width and
