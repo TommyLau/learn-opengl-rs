@@ -309,7 +309,7 @@ pub fn main_1_7_3() {
                         pitch = -89.0;
                     }
 
-                    let mut front = glm::vec3(
+                    let front = glm::vec3(
                         yaw.to_radians().cos() * pitch.to_radians().cos(),
                         pitch.to_radians().sin(),
                         yaw.to_radians().sin() * pitch.to_radians().cos(),
