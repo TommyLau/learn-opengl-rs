@@ -25,6 +25,7 @@ mod _6_2_coordinate_systems_depth;
 mod _6_3_coordinate_systems_multiple;
 mod _6_4_coordinate_systems_exercise3;
 mod _7_1_camera_circle;
+mod _7_2_camera_keyboard_dt;
 
 pub use _1_1_hello_window::*;
 pub use _1_1_hello_window_clear::*;
@@ -53,3 +54,4 @@ pub use _6_2_coordinate_systems_depth::*;
 pub use _6_3_coordinate_systems_multiple::*;
 pub use _6_4_coordinate_systems_exercise3::*;
 pub use _7_1_camera_circle::*;
+pub use _7_2_camera_keyboard_dt::*;
