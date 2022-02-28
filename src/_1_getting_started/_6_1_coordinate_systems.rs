@@ -53,8 +53,8 @@ pub fn main_1_6_1() {
     // Under macOS, the default type is 'f64', so we have to specific to 'f32'
     let vertices: [GLfloat; 20] = [
         // positions      // texture coords
-        0.5,   0.5, 0.0,  1.0, 1.0,   // top right
-        0.5,  -0.5, 0.0,  1.0, 0.0,   // bottom right
+         0.5,  0.5, 0.0,  1.0, 1.0,   // top right
+         0.5, -0.5, 0.0,  1.0, 0.0,   // bottom right
         -0.5, -0.5, 0.0,  0.0, 0.0,   // bottom left
         -0.5,  0.5, 0.0,  0.0, 1.0    // top left
     ];
@@ -174,8 +174,8 @@ pub fn main_1_6_1() {
             let view_location = gl::GetUniformLocation(shader.id, name.as_ptr());
 
             // pass them to the shaders (3 different ways)
-            gl::UniformMatrix4fv(model_location, 1, gl::FALSE, &model[0]);
-            gl::UniformMatrix4fv(view_location, 1, gl::FALSE, view.as_ptr());
+            gl::UniformMatrix4fv(model_location, 1, gl::FALSE, model.as_ptr());
+            gl::UniformMatrix4fv(view_location, 1, gl::FALSE, &view[0]);
             // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
             shader.set_mat4("projection", &projection);
 
