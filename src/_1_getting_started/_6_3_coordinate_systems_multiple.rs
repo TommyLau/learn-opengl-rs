@@ -1,7 +1,6 @@
 extern crate gl;
 extern crate glfw;
 
-use std::ffi::CString;
 use std::mem;
 use gl::types::*;
 use glfw::{Action, Context, Key};
@@ -207,28 +206,23 @@ pub fn main_1_6_3() {
             // activate shader
             shader.use_program();
 
+            // create transformations
+            let view = glm::translate(&glm::identity(), &glm::vec3(0.0 as f32, 0.0, -3.0));
+            let projection = glm::perspective(SCR_WIDTH as f32 / SCR_HEIGHT as f32, f32::to_radians(45.0), 0.1, 100.0);
+
+            // pass transformation matrices to the shader
+            shader.set_mat4("projection", &projection); // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes
+            shader.set_mat4("view", &view);
+
+            // render boxes
+            gl::BindVertexArray(vao);
+
             for i in 0..10 {
-                // create transformations
                 let mut model = glm::translate(&glm::identity(), &cube_positions[i]);
                 let angle = 20.0 * i as f32;
                 model = glm::rotate(&model, angle.to_radians(), &glm::vec3(1.0, 0.3, 0.5));
-                let view = glm::translate(&glm::identity(), &glm::vec3(0.0 as f32, 0.0, -3.0));
-                let projection = glm::perspective(SCR_WIDTH as f32 / SCR_HEIGHT as f32, f32::to_radians(45.0), 0.1, 100.0);
+                shader.set_mat4("model", &model);
 
-                // retrieve the matrix uniform locations
-                let name = CString::new("model").unwrap();
-                let model_location = gl::GetUniformLocation(shader.id, name.as_ptr());
-                let name = CString::new("view").unwrap();
-                let view_location = gl::GetUniformLocation(shader.id, name.as_ptr());
-
-                // pass them to the shaders (3 different ways)
-                gl::UniformMatrix4fv(model_location, 1, gl::FALSE, model.as_ptr());
-                gl::UniformMatrix4fv(view_location, 1, gl::FALSE, &view[0]);
-                // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
-                shader.set_mat4("projection", &projection);
-
-                // render box
-                gl::BindVertexArray(vao);
                 gl::DrawArrays(gl::TRIANGLES, 0, 36);
             }
         }
