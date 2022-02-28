@@ -53,10 +53,10 @@ pub fn main_1_6_1() {
     // Under macOS, the default type is 'f64', so we have to specific to 'f32'
     let vertices: [GLfloat; 20] = [
         // positions      // texture coords
-        0.5, 0.5, 0.0, 1.0, 1.0,   // top right
-        0.5, -0.5, 0.0, 1.0, 0.0,   // bottom right
-        -0.5, -0.5, 0.0, 0.0, 0.0,   // bottom left
-        -0.5, 0.5, 0.0, 0.0, 1.0    // top left
+        0.5,   0.5, 0.0,  1.0, 1.0,   // top right
+        0.5,  -0.5, 0.0,  1.0, 0.0,   // bottom right
+        -0.5, -0.5, 0.0,  0.0, 0.0,   // bottom left
+        -0.5,  0.5, 0.0,  0.0, 1.0    // top left
     ];
     let indices: [GLuint; 6] = [
         0, 1, 3,  // first Triangle
@@ -162,23 +162,24 @@ pub fn main_1_6_1() {
             gl::ActiveTexture(gl::TEXTURE1);
             gl::BindTexture(gl::TEXTURE_2D, texture2);
 
+            // create transformations
             let model = glm::rotate(&glm::identity(), f32::to_radians(-55.0), &glm::vec3(1.0, 0.0, 0.0));
             let view = glm::translate(&glm::identity(), &glm::vec3(0.0 as f32, 0.0, -3.0));
             let projection = glm::perspective(SCR_WIDTH as f32 / SCR_HEIGHT as f32, f32::to_radians(45.0), 0.1, 100.0);
 
+            // retrieve the matrix uniform locations
             let name = CString::new("model").unwrap();
             let model_location = gl::GetUniformLocation(shader.id, name.as_ptr());
-            gl::UniformMatrix4fv(model_location, 1, gl::FALSE, model.as_ptr());
-
             let name = CString::new("view").unwrap();
             let view_location = gl::GetUniformLocation(shader.id, name.as_ptr());
+
+            // pass them to the shaders (3 different ways)
+            gl::UniformMatrix4fv(model_location, 1, gl::FALSE, &model[0]);
             gl::UniformMatrix4fv(view_location, 1, gl::FALSE, view.as_ptr());
+            // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
+            shader.set_mat4("projection", &projection);
 
-            let name = CString::new("projection").unwrap();
-            let projection_location = gl::GetUniformLocation(shader.id, name.as_ptr());
-            gl::UniformMatrix4fv(projection_location, 1, gl::FALSE, projection.as_ptr());
-
-            // with the uniform matrix set, draw the first container
+            // render container
             gl::BindVertexArray(vao);
             gl::DrawElements(gl::TRIANGLES, 6, gl::UNSIGNED_INT, 0 as *const GLvoid);
         }

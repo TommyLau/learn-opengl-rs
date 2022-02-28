@@ -1,6 +1,7 @@
 use std::ffi::CString;
 use std::{fs, ptr};
 use gl::{self, types::*};
+use nalgebra_glm as glm;
 
 pub struct Shader {
     pub id: GLuint,
@@ -82,6 +83,11 @@ impl Shader {
     {
         let name = CString::new(&name[..]).unwrap();
         unsafe { gl::Uniform1f(gl::GetUniformLocation(self.id, name.as_ptr()), value); }
+    }
+    // ------------------------------------------------------------------------
+    pub fn set_mat4(&self, name: &str, mat: &glm::Mat4) {
+        let name = CString::new(&name[..]).unwrap();
+        unsafe { gl::UniformMatrix4fv(gl::GetUniformLocation(self.id, name.as_ptr()), 1, gl::FALSE, mat.as_ptr()); }
     }
 
     // utility function for checking shader compilation/linking errors.
