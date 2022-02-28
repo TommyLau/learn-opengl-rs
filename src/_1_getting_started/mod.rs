@@ -23,6 +23,7 @@ mod _5_3_transformations_exercise2;
 mod _6_1_coordinate_systems;
 mod _6_2_coordinate_systems_depth;
 mod _6_3_coordinate_systems_multiple;
+mod _6_4_coordinate_systems_exercise3;
 
 pub use _1_1_hello_window::*;
 pub use _1_1_hello_window_clear::*;
@@ -49,3 +50,4 @@ pub use _5_3_transformations_exercise2::*;
 pub use _6_1_coordinate_systems::*;
 pub use _6_2_coordinate_systems_depth::*;
 pub use _6_3_coordinate_systems_multiple::*;
+pub use _6_4_coordinate_systems_exercise3::*;
