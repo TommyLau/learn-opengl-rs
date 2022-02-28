@@ -20,6 +20,7 @@ mod _4_6_textures_exercise4;
 mod _5_1_transformations;
 mod _5_2_transformations_exercise1;
 mod _5_3_transformations_exercise2;
+mod _6_1_coordinate_systems;
 
 pub use _1_1_hello_window::*;
 pub use _1_1_hello_window_clear::*;
@@ -43,3 +44,4 @@ pub use _4_6_textures_exercise4::*;
 pub use _5_1_transformations::*;
 pub use _5_2_transformations_exercise1::*;
 pub use _5_3_transformations_exercise2::*;
+pub use _6_1_coordinate_systems::*;
