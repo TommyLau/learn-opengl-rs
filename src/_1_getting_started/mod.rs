@@ -28,6 +28,7 @@ mod _7_1_camera_circle;
 mod _7_2_camera_keyboard_dt;
 mod _7_3_camera_mouse_zoom;
 mod _7_4_camera_class;
+mod _7_5_camera_exercise1;
 
 pub use _1_1_hello_window::*;
 pub use _1_1_hello_window_clear::*;
@@ -59,3 +60,4 @@ pub use _7_1_camera_circle::*;
 pub use _7_2_camera_keyboard_dt::*;
 pub use _7_3_camera_mouse_zoom::*;
 pub use _7_4_camera_class::*;
+pub use _7_5_camera_exercise1::*;
