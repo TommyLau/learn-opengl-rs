@@ -8,6 +8,6 @@ edition = "2021"
 
 [dependencies]
 gl = "0.14.0"
-glfw = "0.43.0"
+glfw = "0.44.0"
 image = "0.24.1"
 nalgebra-glm = "0.16.0"
