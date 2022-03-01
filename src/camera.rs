@@ -60,24 +60,23 @@ impl Default for Camera {
 impl Camera {
     // returns the view matrix calculated using Euler Angles and the LookAt Matrix
     pub fn get_view_matrix(&self) -> glm::Mat4 {
-        glm::look_at(&self.position, &self.position.add(self.front), &self.up)
+        glm::look_at(&self.position, &(self.position + self.front), &self.up)
     }
 
     // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
     pub fn process_keyboard(&mut self, direction: CameraMovement, delta_time: f32) {
         let velocity = self.movement_speed * delta_time;
         if direction == Forward {
-            self.position = self.position.add(self.front * velocity);
+            self.position += self.front * velocity;
         }
         if direction == Backward {
-            self.position = self.position.sub(self.front * velocity);
+            self.position -= self.front * velocity;
         }
         if direction == Left {
-            self.position = self.position.sub(self.right * velocity);
+            self.position -= self.right * velocity;
         }
         if direction == Right {
-            self.position = self.position.add(self.right * velocity);
-            // TODO, try to add directly
+            self.position += self.right * velocity;
         }
     }
 
