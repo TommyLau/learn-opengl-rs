@@ -9,3 +9,6 @@
 - [Textures](https://learnopengl.com/Getting-started/Textures)
 - [Transformations](https://learnopengl.com/Getting-started/Transformations)
 - [Coordinate Systems](https://learnopengl.com/Getting-started/Coordinate-Systems)
+- [Camera](https://learnopengl.com/Getting-started/Camera)
+  - see also [`../camera.rs`](../camera.rs)
+- [Review](https://learnopengl.com/Getting-started/Review)
