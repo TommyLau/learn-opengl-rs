@@ -1,9 +1,10 @@
+mod camera;
 mod shader;
 mod _1_getting_started;
 
 use _1_getting_started::*;
 
-const MAIN_PROGRAM: &str = "1.7.3";
+const MAIN_PROGRAM: &str = "1.7.4";
 
 fn main() {
     let mut main = MAIN_PROGRAM;
@@ -43,6 +44,7 @@ fn main() {
         "1.7.1" => main_1_7_1(),
         "1.7.2" => main_1_7_2(),
         "1.7.3" => main_1_7_3(),
+        "1.7.4" => main_1_7_4(),
         _ => {}
     }
 }
