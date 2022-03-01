@@ -207,7 +207,7 @@ pub fn main_1_7_3() {
     let mut fov = 45.0;
 
     // timing
-    let mut delta_time = 0.0; // time between current frame and last frame
+    let mut delta_time; // time between current frame and last frame
     let mut last_frame = 0.0;
 
     // render loop

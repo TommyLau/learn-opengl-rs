@@ -19,7 +19,6 @@ fn calculate_look_at_matrix(position: &glm::Vec3, target: &glm::Vec3, world_up: 
     // 1. Position = known
     // 2. Calculate cameraDirection
     let axis_z = (position - target).normalize();
-    let axis_z = position - target;
     // 3. Get positive right axis vector
     let axis_x = world_up.cross(&axis_z).normalize();
     // 4. Calculate camera up vector
@@ -225,7 +224,7 @@ pub fn main_1_7_6() {
     let mut first_mouse = true;
 
     // timing
-    let mut delta_time = 0.0; // time between current frame and last frame
+    let mut delta_time; // time between current frame and last frame
     let mut last_frame = 0.0;
 
     // render loop
