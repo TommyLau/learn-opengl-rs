@@ -11,3 +11,6 @@ gl = "0.14.0"
 glfw = "0.44.0"
 image = "0.24.1"
 nalgebra-glm = "0.16.0"
+
+[profile.release]
+strip = "symbols"
