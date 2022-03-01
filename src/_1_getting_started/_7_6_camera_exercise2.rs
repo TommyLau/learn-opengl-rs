@@ -14,7 +14,28 @@ use crate::camera::CameraMovement;
 const SCR_WIDTH: u32 = 800;
 const SCR_HEIGHT: u32 = 600;
 
-pub fn main_1_7_5() {
+// Custom implementation of the LookAt function
+fn calculate_look_at_matrix(position: &glm::Vec3, target: &glm::Vec3, world_up: &glm::Vec3) -> glm::Mat4 {
+    // 1. Position = known
+    // 2. Calculate cameraDirection
+    let axis_z = (position - target).normalize();
+    let axis_z = position - target;
+    // 3. Get positive right axis vector
+    let axis_x = world_up.cross(&axis_z).normalize();
+    // 4. Calculate camera up vector
+    let axis_y = axis_z.cross(&axis_x);
+
+    // Create translation and rotation matrix
+    // In glm we access elements as mat[col][row] due to column-major layout
+    glm::Mat4::new(
+        axis_x.x, axis_x.y, axis_x.z, -position.dot(&axis_x),
+        axis_y.x, axis_y.y, axis_y.z, -position.dot(&axis_y),
+        axis_z.x, axis_z.y, axis_z.z, -position.dot(&axis_z),
+        0.0, 0.0, 0.0, 1.0,
+    )
+}
+
+pub fn main_1_7_6() {
     // glfw: initialize and configure
     // ------------------------------
     let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
@@ -236,7 +257,7 @@ pub fn main_1_7_5() {
             shader.set_mat4("projection", &projection);
 
             // camera/view transformation
-            let view = camera.get_view_matrix();
+            let view = calculate_look_at_matrix(&camera.position, &(camera.position + camera.front), &camera.world_up);
             shader.set_mat4("view", &view);
 
             // render boxes
