@@ -1,6 +1,3 @@
-extern crate gl;
-extern crate glfw;
-
 use std::mem;
 use gl::types::*;
 use glfw::{Action, Context, Key};
@@ -71,7 +68,7 @@ pub fn main_1_3_3() {
                        gl::STATIC_DRAW);
 
         // position attribute
-        gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, (6 * mem::size_of::<GLfloat>()) as GLsizei, 0 as *const GLvoid);
+        gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, (6 * mem::size_of::<GLfloat>()) as GLsizei, std::ptr::null::<GLvoid>());
         gl::EnableVertexAttribArray(0);
         // color attribute
         gl::VertexAttribPointer(1, 3, gl::FLOAT, gl::FALSE, (6 * mem::size_of::<GLfloat>()) as GLsizei, (3 * mem::size_of::<GLfloat>()) as *const GLvoid);

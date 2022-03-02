@@ -1,6 +1,3 @@
-extern crate gl;
-extern crate glfw;
-
 use glfw::{Action, Context, Key};
 
 // settings

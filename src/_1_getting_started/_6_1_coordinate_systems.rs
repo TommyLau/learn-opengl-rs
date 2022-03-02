@@ -1,11 +1,7 @@
-extern crate gl;
-extern crate glfw;
-
 use std::ffi::CString;
 use std::mem;
 use gl::types::*;
 use glfw::{Action, Context, Key};
-use image;
 use nalgebra_glm as glm;
 use crate::shader::Shader;
 
@@ -85,7 +81,7 @@ pub fn main_1_6_1() {
                        gl::STATIC_DRAW);
 
         // position attribute
-        gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, (5 * mem::size_of::<GLfloat>()) as GLsizei, 0 as *const GLvoid);
+        gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, (5 * mem::size_of::<GLfloat>()) as GLsizei, std::ptr::null::<GLvoid>());
         gl::EnableVertexAttribArray(0);
         // texture coord attribute
         gl::VertexAttribPointer(1, 2, gl::FLOAT, gl::FALSE, (5 * mem::size_of::<GLfloat>()) as GLsizei, (3 * mem::size_of::<GLfloat>()) as *const GLvoid);
@@ -164,7 +160,7 @@ pub fn main_1_6_1() {
 
             // create transformations
             let model = glm::rotate(&glm::identity(), f32::to_radians(-55.0), &glm::vec3(1.0, 0.0, 0.0));
-            let view = glm::translate(&glm::identity(), &glm::vec3(0.0 as f32, 0.0, -3.0));
+            let view = glm::translate(&glm::identity(), &glm::vec3(0.0_f32, 0.0, -3.0));
             let projection = glm::perspective(SCR_WIDTH as f32 / SCR_HEIGHT as f32, f32::to_radians(45.0), 0.1, 100.0);
 
             // retrieve the matrix uniform locations
@@ -181,7 +177,7 @@ pub fn main_1_6_1() {
 
             // render container
             gl::BindVertexArray(vao);
-            gl::DrawElements(gl::TRIANGLES, 6, gl::UNSIGNED_INT, 0 as *const GLvoid);
+            gl::DrawElements(gl::TRIANGLES, 6, gl::UNSIGNED_INT, std::ptr::null::<GLvoid>());
         }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

@@ -1,11 +1,7 @@
-extern crate gl;
-extern crate glfw;
-
 use std::ffi::CString;
 use std::mem;
 use gl::types::*;
 use glfw::{Action, Context, Key};
-use image;
 use nalgebra_glm as glm;
 use crate::shader::Shader;
 
@@ -85,7 +81,7 @@ pub fn main_1_5_3() {
                        gl::STATIC_DRAW);
 
         // position attribute
-        gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, (5 * mem::size_of::<GLfloat>()) as GLsizei, 0 as *const GLvoid);
+        gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, (5 * mem::size_of::<GLfloat>()) as GLsizei, std::ptr::null::<GLvoid>());
         gl::EnableVertexAttribArray(0);
         // texture coord attribute
         gl::VertexAttribPointer(1, 2, gl::FLOAT, gl::FALSE, (5 * mem::size_of::<GLfloat>()) as GLsizei, (3 * mem::size_of::<GLfloat>()) as *const GLvoid);
@@ -176,7 +172,7 @@ pub fn main_1_5_3() {
 
             // with the uniform matrix set, draw the first container
             gl::BindVertexArray(vao);
-            gl::DrawElements(gl::TRIANGLES, 6, gl::UNSIGNED_INT, 0 as *const GLvoid);
+            gl::DrawElements(gl::TRIANGLES, 6, gl::UNSIGNED_INT, std::ptr::null::<GLvoid>());
 
             // second transformation
             // ---------------------
@@ -187,7 +183,7 @@ pub fn main_1_5_3() {
             gl::UniformMatrix4fv(transform_location, 1, gl::FALSE, transform.as_ptr());
 
             // now with the uniform matrix being replaced with new transformations, draw it again.
-            gl::DrawElements(gl::TRIANGLES, 6, gl::UNSIGNED_INT, 0 as *const GLvoid);
+            gl::DrawElements(gl::TRIANGLES, 6, gl::UNSIGNED_INT, std::ptr::null::<GLvoid>());
         }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

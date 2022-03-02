@@ -70,23 +70,23 @@ impl Shader {
     // ------------------------------------------------------------------------
     #[allow(dead_code)]
     pub fn set_bool(&self, name: &str, value: bool) {
-        let name = CString::new(&name[..]).unwrap();
+        let name = CString::new(name).unwrap();
         unsafe { gl::Uniform1i(gl::GetUniformLocation(self.id, name.as_ptr()), value as GLint); }
     }
     // ------------------------------------------------------------------------
     pub fn set_int(&self, name: &str, value: GLint) {
-        let name = CString::new(&name[..]).unwrap();
+        let name = CString::new(name).unwrap();
         unsafe { gl::Uniform1i(gl::GetUniformLocation(self.id, name.as_ptr()), value); }
     }
     // ------------------------------------------------------------------------
     pub fn set_float(&self, name: &str, value: GLfloat)
     {
-        let name = CString::new(&name[..]).unwrap();
+        let name = CString::new(name).unwrap();
         unsafe { gl::Uniform1f(gl::GetUniformLocation(self.id, name.as_ptr()), value); }
     }
     // ------------------------------------------------------------------------
     pub fn set_mat4(&self, name: &str, mat: &glm::Mat4) {
-        let name = CString::new(&name[..]).unwrap();
+        let name = CString::new(name).unwrap();
         unsafe { gl::UniformMatrix4fv(gl::GetUniformLocation(self.id, name.as_ptr()), 1, gl::FALSE, mat.as_ptr()); }
     }
 

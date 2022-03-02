@@ -1,11 +1,7 @@
-extern crate gl;
-extern crate glfw;
-
 use std::ffi::CString;
 use std::mem;
 use gl::types::*;
 use glfw::{Action, Context, Key};
-use image;
 use nalgebra_glm as glm;
 use crate::shader::Shader;
 
@@ -85,7 +81,7 @@ pub fn main_1_5_1() {
                        gl::STATIC_DRAW);
 
         // position attribute
-        gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, (5 * mem::size_of::<GLfloat>()) as GLsizei, 0 as *const GLvoid);
+        gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, (5 * mem::size_of::<GLfloat>()) as GLsizei, std::ptr::null::<GLvoid>());
         gl::EnableVertexAttribArray(0);
         // texture attribute
         gl::VertexAttribPointer(1, 2, gl::FLOAT, gl::FALSE, (5 * mem::size_of::<GLfloat>()) as GLsizei, (3 * mem::size_of::<GLfloat>()) as *const GLvoid);
@@ -175,7 +171,7 @@ pub fn main_1_5_1() {
 
             // render container
             gl::BindVertexArray(vao);
-            gl::DrawElements(gl::TRIANGLES, 6, gl::UNSIGNED_INT, 0 as *const GLvoid);
+            gl::DrawElements(gl::TRIANGLES, 6, gl::UNSIGNED_INT, std::ptr::null::<GLvoid>());
         }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

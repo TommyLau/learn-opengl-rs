@@ -1,11 +1,6 @@
-extern crate gl;
-extern crate glfw;
-
 use std::mem;
-use std::ops::{Add, Sub};
 use gl::types::*;
 use glfw::{Action, Context, Key};
-use image;
 use nalgebra_glm as glm;
 use crate::shader::Shader;
 
@@ -128,7 +123,7 @@ pub fn main_1_7_2() {
                        gl::STATIC_DRAW);
 
         // position attribute
-        gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, (5 * mem::size_of::<GLfloat>()) as GLsizei, 0 as *const GLvoid);
+        gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, (5 * mem::size_of::<GLfloat>()) as GLsizei, std::ptr::null::<GLvoid>());
         gl::EnableVertexAttribArray(0);
         // texture coord attribute
         gl::VertexAttribPointer(1, 2, gl::FLOAT, gl::FALSE, (5 * mem::size_of::<GLfloat>()) as GLsizei, (3 * mem::size_of::<GLfloat>()) as *const GLvoid);
@@ -229,15 +224,15 @@ pub fn main_1_7_2() {
             shader.use_program();
 
             // camera/view transformation
-            let view = glm::look_at(&camera_position, &camera_position.add(camera_front), &camera_up);
+            let view = glm::look_at(&camera_position, &(camera_position + camera_front), &camera_up);
             shader.set_mat4("view", &view);
 
             // render boxes
             gl::BindVertexArray(vao);
 
-            for i in 0..10 {
+            for (i, cube_position) in cube_positions.iter().enumerate() {
                 // calculate the model matrix for each object and pass it to shader before drawing
-                let mut model = glm::translate(&glm::identity(), &cube_positions[i]);
+                let mut model = glm::translate(&glm::identity(), cube_position);
                 let angle = 20.0 * i as f32;
                 model = glm::rotate(&model, angle.to_radians(), &glm::vec3(1.0, 0.3, 0.5));
                 shader.set_mat4("model", &model);
@@ -260,16 +255,16 @@ pub fn main_1_7_2() {
                     window.set_should_close(true);
                 }
                 glfw::WindowEvent::Key(Key::W, _, Action::Press | Action::Repeat, _) => {
-                    camera_position = camera_position.add(camera_front * camera_speed);
+                    camera_position += camera_front * camera_speed;
                 }
                 glfw::WindowEvent::Key(Key::S, _, Action::Press | Action::Repeat, _) => {
-                    camera_position = camera_position.sub(camera_front * camera_speed);
+                    camera_position -= camera_front * camera_speed;
                 }
                 glfw::WindowEvent::Key(Key::A, _, Action::Press | Action::Repeat, _) => {
-                    camera_position = camera_position.sub(camera_front.cross(&camera_up).normalize() * camera_speed);
+                    camera_position -= camera_front.cross(&camera_up).normalize() * camera_speed;
                 }
                 glfw::WindowEvent::Key(Key::D, _, Action::Press | Action::Repeat, _) => {
-                    camera_position = camera_position.add(camera_front.cross(&camera_up).normalize() * camera_speed);
+                    camera_position += camera_front.cross(&camera_up).normalize() * camera_speed;
                 }
                 glfw::WindowEvent::FramebufferSize(width, height) => {
                     // make sure the viewport matches the new window dimensions; note that width and

@@ -1,6 +1,3 @@
-extern crate gl;
-extern crate glfw;
-
 use std::ffi::CString;
 use std::{mem, ptr};
 use gl::types::*;
@@ -54,8 +51,7 @@ pub fn main_1_3_1() {
     // build and compile our shader program
     // ------------------------------------
     let mut success = gl::FALSE as GLint;
-    let mut info_log: Vec<u8> = Vec::with_capacity(512);
-    info_log.resize(512, 0);
+    let mut info_log: Vec<u8> = vec![0; 512];
 
     // vertex shader
     let vertex_shader = unsafe { gl::CreateShader(gl::VERTEX_SHADER) };
@@ -67,7 +63,7 @@ pub fn main_1_3_1() {
         // check for shader compile errors
         gl::GetShaderiv(vertex_shader, gl::COMPILE_STATUS, &mut success);
         if success != gl::TRUE as GLint {
-            gl::GetShaderInfoLog(vertex_shader, 512, ptr::null_mut(), info_log.as_ptr() as *mut GLchar);
+            gl::GetShaderInfoLog(vertex_shader, 512, ptr::null_mut(), info_log.as_mut_ptr() as *mut GLchar);
             eprintln!("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n{}", String::from_utf8_lossy(&info_log));
         }
     }
@@ -128,7 +124,7 @@ pub fn main_1_3_1() {
                        vertices.as_ptr() as *const GLvoid,
                        gl::STATIC_DRAW);
 
-        gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, (3 * mem::size_of::<GLfloat>()) as GLsizei, 0 as *const GLvoid);
+        gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, (3 * mem::size_of::<GLfloat>()) as GLsizei, std::ptr::null::<GLvoid>());
         gl::EnableVertexAttribArray(0);
 
         // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
