@@ -1,10 +1,10 @@
-# learn-opengl-rs
+# learn-opengl-rs [![Build Status](https://github.com/TommyLau/learn-opengl-rs/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/TommyLau/learn-opengl-rs/actions/workflows/ci.yml)
 
-This is a Rust port of https://github.com/JoeyDeVries/LearnOpenGL
+This is a Rust port of https://github.com/JoeyDeVries/LearnOpenGL which is implemented in C++.
 
-The tutorials can be found at https://learnopengl.com/
+The OpenGL tutorials could be found at: https://learnopengl.com/
 
-The source code structure has been kept similar to the original C++ source code as possible as I can, but also make the code Rust style.
+This repository's code structure has been kept as same as possible to the original C++ source code, and obey the Rust naming conventions at the same time.
 
 Tutorials can be ran like the following (for example: `src/_1_getting_started/_3_6_shaders_exercise3.rs`):
 
