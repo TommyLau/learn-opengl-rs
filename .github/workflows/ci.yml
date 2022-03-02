@@ -13,7 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Stable
-        run: cargo test
+        run: |
+          rustup install 1.59.0
+          cargo test
       - name: Clippy
         run: |
           rustup component add clippy
@@ -23,6 +25,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install target
-        run: rustup update && rustup target add aarch64-apple-darwin
+        run: |
+          rustup install 1.59.0
+          rustup target add aarch64-apple-darwin
       - name: Build
         run: cargo build --target=aarch64-apple-darwin
