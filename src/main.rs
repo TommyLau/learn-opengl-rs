@@ -1,10 +1,12 @@
 mod camera;
 mod shader;
 mod _1_getting_started;
+mod _2_lighting;
 
 use _1_getting_started::*;
+use _2_lighting::*;
 
-const MAIN_PROGRAM: &str = "1.7.6";
+const MAIN_PROGRAM: &str = "2.1";
 
 fn main() {
     let mut main = MAIN_PROGRAM;
@@ -15,6 +17,7 @@ fn main() {
     }
 
     match main {
+        // Chapter 1 - Get started
         "1.1.1" => main_1_1_1(),
         "1.1.2" => main_1_1_2(),
         "1.2.1" => main_1_2_1(),
@@ -47,6 +50,10 @@ fn main() {
         "1.7.4" => main_1_7_4(),
         "1.7.5" => main_1_7_5(),
         "1.7.6" => main_1_7_6(),
+
+        // Chapter 2 - Lighting
+        "2.1" => main_2_1(),
+
         _ => {}
     }
 }
