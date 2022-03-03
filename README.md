@@ -15,6 +15,7 @@ cargo run 1.3.6
 ## Chapters
 
 ### [1. Getting started](src/_1_getting_started)
+### [2. Lighting](src/_2_lighting)
 
 ## References
 
