@@ -91,6 +91,12 @@ impl Shader {
         unsafe { gl::Uniform3f(gl::GetUniformLocation(self.id, name.as_ptr()), x, y, z); }
     }
     // ------------------------------------------------------------------------
+    pub fn set_vec3v(&self, name: &str, value: &glm::Vec3)
+    {
+        let name = CString::new(name).unwrap();
+        unsafe { gl::Uniform3fv(gl::GetUniformLocation(self.id, name.as_ptr()), 1, value.as_ptr()); }
+    }
+    // ------------------------------------------------------------------------
     pub fn set_mat4(&self, name: &str, mat: &glm::Mat4) {
         let name = CString::new(name).unwrap();
         unsafe { gl::UniformMatrix4fv(gl::GetUniformLocation(self.id, name.as_ptr()), 1, gl::FALSE, mat.as_ptr()); }
