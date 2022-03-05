@@ -6,7 +6,7 @@ mod _2_lighting;
 use _1_getting_started::*;
 use _2_lighting::*;
 
-const MAIN_PROGRAM: &str = "2.2.1";
+const MAIN_PROGRAM: &str = "2.2.2";
 
 fn main() {
     let mut main = MAIN_PROGRAM;
@@ -54,6 +54,7 @@ fn main() {
         // Chapter 2 - Lighting
         "2.1" => main_2_1(),
         "2.2.1" => main_2_2_1(),
+        "2.2.2" => main_2_2_2(),
 
         _ => {}
     }
