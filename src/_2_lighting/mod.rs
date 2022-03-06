@@ -4,6 +4,7 @@ mod _2_2_basic_lighting_specular;
 mod _2_3_basic_lighting_exercise1;
 mod _2_4_basic_lighting_exercise2;
 mod _2_5_basic_lighting_exercise3;
+mod _3_1_materials;
 
 pub use _1_colors::*;
 pub use _2_1_basic_lighting_diffuse::*;
@@ -11,3 +12,4 @@ pub use _2_2_basic_lighting_specular::*;
 pub use _2_3_basic_lighting_exercise1::*;
 pub use _2_4_basic_lighting_exercise2::*;
 pub use _2_5_basic_lighting_exercise3::*;
+pub use _3_1_materials::*;
