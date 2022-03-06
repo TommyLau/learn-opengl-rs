@@ -10,6 +10,7 @@ mod _4_1_lighting_maps_diffuse_map;
 mod _4_2_lighting_maps_specular_map;
 mod _4_3_lighting_maps_exercise2;
 mod _4_4_lighting_maps_exercise4;
+mod _5_1_light_casters_directional;
 
 pub use _1_colors::*;
 pub use _2_1_basic_lighting_diffuse::*;
@@ -23,3 +24,4 @@ pub use _4_1_lighting_maps_diffuse_map::*;
 pub use _4_2_lighting_maps_specular_map::*;
 pub use _4_3_lighting_maps_exercise2::*;
 pub use _4_4_lighting_maps_exercise4::*;
+pub use _5_1_light_casters_directional::*;
