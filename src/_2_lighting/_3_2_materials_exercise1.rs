@@ -185,8 +185,8 @@ pub fn main_2_3_2() {
 
             // material properties
             lighting_shader.set_vec3("material.ambient", 0.0, 0.1, 0.06);
-            lighting_shader.set_vec3("material.diffuse", 0.0, 0.50980392, 0.50980392);
-            lighting_shader.set_vec3("material.specular", 0.50196078, 0.50196078, 0.50196078);
+            lighting_shader.set_vec3("material.diffuse", 0.0, 0.509_803_93, 0.509_803_93);
+            lighting_shader.set_vec3("material.specular", 0.501_960_78, 0.501_960_78, 0.501_960_78);
             lighting_shader.set_float("material.shininess", 32.0);
 
             // view/projection transformations
