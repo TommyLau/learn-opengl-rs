@@ -8,6 +8,7 @@ mod _3_1_materials;
 mod _3_2_materials_exercise1;
 mod _4_1_lighting_maps_diffuse_map;
 mod _4_2_lighting_maps_specular_map;
+mod _4_3_lighting_maps_exercise2;
 
 pub use _1_colors::*;
 pub use _2_1_basic_lighting_diffuse::*;
@@ -19,3 +20,4 @@ pub use _3_1_materials::*;
 pub use _3_2_materials_exercise1::*;
 pub use _4_1_lighting_maps_diffuse_map::*;
 pub use _4_2_lighting_maps_specular_map::*;
+pub use _4_3_lighting_maps_exercise2::*;
