@@ -12,6 +12,7 @@ mod _4_3_lighting_maps_exercise2;
 mod _4_4_lighting_maps_exercise4;
 mod _5_1_light_casters_directional;
 mod _5_2_light_casters_point;
+mod _5_3_light_casters_spot;
 
 pub use _1_colors::*;
 pub use _2_1_basic_lighting_diffuse::*;
@@ -27,3 +28,4 @@ pub use _4_3_lighting_maps_exercise2::*;
 pub use _4_4_lighting_maps_exercise4::*;
 pub use _5_1_light_casters_directional::*;
 pub use _5_2_light_casters_point::*;
+pub use _5_3_light_casters_spot::*;
