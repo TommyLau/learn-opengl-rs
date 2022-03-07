@@ -6,7 +6,7 @@ mod _2_lighting;
 use _1_getting_started::*;
 use _2_lighting::*;
 
-const MAIN_PROGRAM: &str = "2.6.1";
+const MAIN_PROGRAM: &str = "2.6";
 
 fn main() {
     let mut main = MAIN_PROGRAM;
@@ -68,7 +68,7 @@ fn main() {
         "2.5.2" => main_2_5_2(),
         "2.5.3" => main_2_5_3(),
         "2.5.4" => main_2_5_4(),
-        "2.6.1" => main_2_6_1(),
+        "2.6" => main_2_6(),
 
         _ => {}
     }

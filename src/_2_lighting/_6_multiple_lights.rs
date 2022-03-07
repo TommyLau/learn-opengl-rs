@@ -11,7 +11,7 @@ use crate::camera::CameraMovement;
 const SCR_WIDTH: u32 = 800;
 const SCR_HEIGHT: u32 = 600;
 
-pub fn main_2_6_1() {
+pub fn main_2_6() {
     // glfw: initialize and configure
     // ------------------------------
     let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
@@ -44,7 +44,7 @@ pub fn main_2_6_1() {
     // ------------------------------------
     let lighting_shader = match Shader::new( // you can name your shader files however you like
                                              "src/_2_lighting/shaders/4.1.lighting_maps.vert",
-                                             "src/_2_lighting/shaders/6.1.multiple_lights.frag")
+                                             "src/_2_lighting/shaders/6.multiple_lights.frag")
     {
         Ok(shader) => shader,
         Err(error) => {
