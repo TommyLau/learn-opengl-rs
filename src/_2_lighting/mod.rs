@@ -14,6 +14,7 @@ mod _5_1_light_casters_directional;
 mod _5_2_light_casters_point;
 mod _5_3_light_casters_spot;
 mod _5_4_light_casters_spot_soft;
+mod _6_1_multiple_lights;
 
 pub use _1_colors::*;
 pub use _2_1_basic_lighting_diffuse::*;
@@ -31,3 +32,4 @@ pub use _5_1_light_casters_directional::*;
 pub use _5_2_light_casters_point::*;
 pub use _5_3_light_casters_spot::*;
 pub use _5_4_light_casters_spot_soft::*;
+pub use _6_1_multiple_lights::*;
