@@ -1,12 +1,17 @@
 mod camera;
+mod mesh;
+mod model;
 mod shader;
+
 mod _1_getting_started;
 mod _2_lighting;
+mod _3_model_loading;
 
 use _1_getting_started::*;
 use _2_lighting::*;
+use _3_model_loading::*;
 
-const MAIN_PROGRAM: &str = "2.6";
+const MAIN_PROGRAM: &str = "3.1";
 
 fn main() {
     let mut main = MAIN_PROGRAM;
@@ -69,6 +74,9 @@ fn main() {
         "2.5.3" => main_2_5_3(),
         "2.5.4" => main_2_5_4(),
         "2.6" => main_2_6(),
+
+        // Chapter 3 - Model Loading
+        "3.1" => main_3_1(),
 
         _ => {}
     }
