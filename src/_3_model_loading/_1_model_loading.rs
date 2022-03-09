@@ -1,7 +1,4 @@
-use std::mem;
-use gl::types::*;
 use glfw::{Action, Context, Key};
-use image::DynamicImage;
 use nalgebra_glm as glm;
 use crate::shader::Shader;
 use crate::camera::Camera;
@@ -43,8 +40,8 @@ pub fn main_3_1() {
 
     // build and compile shaders
     // -------------------------
-    let ourShader = match Shader::new("src/_3_model_loading/shaders/1.model_loading.vert",
-                                      "src/_3_model_loading/shaders/1.model_loading.frag")
+    let our_shader = match Shader::new("src/_3_model_loading/shaders/1.model_loading.vert",
+                                       "src/_3_model_loading/shaders/1.model_loading.frag")
     {
         Ok(shader) => shader,
         Err(error) => {
@@ -55,7 +52,7 @@ pub fn main_3_1() {
 
     // load models
     // -----------
-    let ourModel = Model::new("resources/objects/backpack/backpack.obj", false);
+    let our_model = Model::new("resources/objects/backpack/backpack.obj", false);
 
     // draw in wireframe
     //unsafe { gl::PolygonMode(gl::FRONT_AND_BACK, gl::LINE); }
@@ -89,20 +86,20 @@ pub fn main_3_1() {
             gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
 
             // be sure to activate shader when setting uniforms/drawing objects
-            ourShader.use_program();
+            our_shader.use_program();
 
             // view/projection transformations
             let projection = glm::perspective(SCR_WIDTH as f32 / SCR_HEIGHT as f32, camera.zoom.to_radians(), 0.1, 100.0);
             let view = camera.get_view_matrix();
-            ourShader.set_mat4("projection", &projection);
-            ourShader.set_mat4("view", &view);
+            our_shader.set_mat4("projection", &projection);
+            our_shader.set_mat4("view", &view);
 
             // render the loaded model
             let mut model: glm::Mat4 = glm::identity();
             model = glm::translate(&model, &glm::vec3(0.0, 0.0, 0.0)); // translate it down so it's at the center of the scene
             model = glm::scale(&model, &glm::vec3(1.0, 1.0, 1.0)); // it's a bit too big for our scene, so scale it down
-            ourShader.set_mat4("model", &model);
-            ourModel.Draw(&ourShader);
+            our_shader.set_mat4("model", &model);
+            our_model.draw(&our_shader);
         }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

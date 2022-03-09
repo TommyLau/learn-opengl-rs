@@ -13,7 +13,7 @@ pub struct Model {
     pub textures_loaded: Vec<Texture>,
     pub meshes: Vec<Mesh>,
     pub directory: String,
-    pub gammaCorrection: bool,
+    pub gamma_correction: bool,
 }
 
 impl Model {
@@ -21,23 +21,23 @@ impl Model {
     pub fn new(path: &str, gamma: bool) -> Model
     {
         let mut model = Model {
-            gammaCorrection: gamma,
+            gamma_correction: gamma,
             ..Model::default()
         };
-        model.loadModel(path);
+        model.load_model(path);
         model
     }
 
     // draws the model, and thus all its meshes
-    pub fn Draw(&self, shader: &Shader)
+    pub fn draw(&self, shader: &Shader)
     {
         for mesh in &self.meshes {
-            mesh.Draw(shader);
+            mesh.draw(shader);
         }
     }
 
     // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
-    fn loadModel(&mut self, path: &str)
+    fn load_model(&mut self, path: &str)
     {
         // read file via ASSIMP
         let scene = match Scene::from_file(path,
@@ -58,22 +58,21 @@ impl Model {
         self.directory = path[..path.rfind('/').unwrap()].to_owned();
 
         for mesh in scene.meshes.iter() {
-            println!("name: {}", mesh.name);
             // walk through each of the mesh's vertices
             let mut vertices: Vec<Vertex> = Vec::with_capacity(mesh.vertices.len());
 
             for i in 0..mesh.vertices.len() {
-                let mut vertex = Vertex::default();
+                let mut vertex = Vertex {
+                    // positions
+                    position: glm::vec3(mesh.vertices[i].x, mesh.vertices[i].y, mesh.vertices[i].z),
+                    // normals
+                    normal: glm::vec3(mesh.normals[i].x, mesh.normals[i].y, mesh.normals[i].z),
+                    ..Default::default()
+                };
 
-                // positions
-                vertex.Position = glm::vec3(mesh.vertices[i].x, mesh.vertices[i].y, mesh.vertices[i].z);
-                // normals
-                vertex.Normal = glm::vec3(mesh.normals[i].x, mesh.normals[i].y, mesh.normals[i].z);
                 // texture coordinates
                 if let Some(texture_coord) = &mesh.texture_coords[0] {
-                    vertex.TexCoords = glm::vec2(texture_coord[i].x, texture_coord[i].y);
-                } else {
-                    vertex.TexCoords = glm::zero();
+                    vertex.tex_coords = glm::vec2(texture_coord[i].x, texture_coord[i].y);
                 }
 
                 vertices.push(vertex);
@@ -97,7 +96,7 @@ impl Model {
             // normal: texture_normalN
             let mut textures = Vec::new();
             for (texture_type, texture) in &material.textures {
-                let typeName = match texture_type {
+                let type_name = match texture_type {
                     // 1. diffuse maps
                     TextureType::Diffuse => "texture_diffuse",
                     // 2. specular maps
@@ -111,34 +110,31 @@ impl Model {
                     // Unknown
                     _ => "texture_unknown",
                 };
-                textures.push(self.loadMaterialTexture(typeName, &texture[0].path));
+                textures.push(self.load_material_texture(type_name, &texture[0].path));
             }
 
             self.meshes.push(Mesh::new(vertices, indices, textures));
         }
-        //println!("{:#?}", self.meshes);
     }
 
-    fn loadMaterialTexture(&mut self, typeName: &str, path: &str) -> Texture {
-        print!("{typeName} - {path} : ");
+    fn load_material_texture(&mut self, type_name: &str, path: &str) -> Texture {
         if let Some(texture) = self.textures_loaded.iter().find(|&x| x.path == path)
         {
-            println!("[OLD] - {}", texture.id);
             return texture.clone();
         }
 
         let texture = Texture {
-            id: TextureFromFile(path, &self.directory, self.gammaCorrection),
-            type_: typeName.to_string(),
+            id: texture_from_file(path, &self.directory, self.gamma_correction),
+            type_name: type_name.to_string(),
             path: path.to_string(),
         };
-        println!("[New] - {}", texture.id);
+
         self.textures_loaded.push(texture.clone());
         texture
     }
 }
 
-fn TextureFromFile(path: &str, directory: &str, gamma: bool) -> GLuint
+fn texture_from_file(path: &str, directory: &str, _gamma: bool) -> GLuint
 {
     let filename = format!("{directory}/{path}");
     let image = image::open(filename).expect("Texture failed to load at path: {path}");
